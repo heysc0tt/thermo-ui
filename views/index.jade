@@ -1,0 +1,72 @@
+extends layout
+
+block extraHeader
+  script(src='https://cdnjs.cloudflare.com/ajax/libs/flot/0.8.3/jquery.flot.min.js')
+  script(src='https://cdnjs.cloudflare.com/ajax/libs/flot/0.8.3/jquery.flot.time.min.js')
+  script(src='https://cdnjs.cloudflare.com/ajax/libs/flot/0.8.3/jquery.flot.resize.min.js')
+  script(src='http://flot.base.is/jquery.flot.downsample.js')
+  script(src='https://rawgit.com/MichaelZinsmaier/CurvedLines/master/curvedLines.js')
+  script.
+    $(function() {
+      $.ajax({
+        url: "/temps"
+      }).done(function( data ) {
+        var bbqData = [];
+        var tempData = [];
+        $.each(data.reverse(), function(key, value) {
+          bbqData.push([value.timestamp, value.bbq]);
+          tempData.push([value.timestamp, value.temp]);
+        });
+        var seriesData = [bbqData, tempData];
+        $.plot($("#placeholder"), [
+            {
+                data: bbqData,
+                curvedLines: {
+                    apply: true  // <- set apply <- curve only this data series
+                }
+            },
+            {
+                data: tempData,
+                curvedLines: {
+                    apply: true  // <- set apply <- curve only this data series
+                }
+            }
+        ], 
+        { 
+            xaxis: {
+              mode: "time",
+              timezone: "browser",
+              timeformat: "%a %I%p"
+            },
+            series: {
+              downsample: { 
+                threshold: 100 
+              },
+              curvedLines: {
+                active: true,
+                nrSplinePoints: 240 // <- control nr of helper points
+              }    
+            }
+        });
+
+        $('#placeholder').resize(function () {
+            console.log("Placeholder is now "
+                + $(this).width() + "x" + $(this).height()
+                + " pixels");
+        });
+
+        $('#current_indoor .temp').text(tempData[tempData.length-1][1]);
+        $('#current_outdoor .temp').text(bbqData[bbqData.length-1][1]);
+      });
+    });
+
+block content
+  h1= title
+  section(id='current_temps')
+    div(id='current_indoor')
+      p Indoor Temp
+      p(class='temp') -
+    div(id='current_outdoor')
+      p Outdoor Temp
+      p(class='temp') -
+  div(id='placeholder' style="width:100%;height:300px")

@@ -1,0 +1,35 @@
+body {
+  padding: 50px;
+  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+}
+
+a {
+  color: #00B7FF;
+}
+
+p.temp {
+    font-size: 4em;
+    font-weight: bold;
+    font-family: 'Helvetica Neue', 'Open-Bold', sans-serif;
+}
+
+p {
+    font-size: 2em;
+    font-family: 'Helvetica Neue', 'Open-Bold', sans-serif;
+}
+
+div#current_indoor {
+    margin-right: 50px;
+    margin-left: 50px;
+    display:inline-block;
+}
+
+div#current_outdoor {
+    margin-right: 50px;
+    margin-left: 50px;
+    display:inline-block;
+}
+
+section#current_temps {
+    background-color: grey;
+}
