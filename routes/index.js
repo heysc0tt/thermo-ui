@@ -2,9 +2,12 @@ var express = require('express');
 var router = express.Router();
 var nconf = require('nconf');
 
-nconf.argv()
-   .env()
-   .file({ file: 'config/config.json' });
+var n = nconf.argv().env().file('config/config.json');
+
+var confFile = nconf.get("CONFIG_FILE");
+if(confFile) {
+	nconf.file(confFile);
+}
 
 var mongoConfig = getMongoConfig();
 
