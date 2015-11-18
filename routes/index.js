@@ -2,7 +2,7 @@ var express = require('express');
 var router = express.Router();
 var nconf = require('nconf');
 
-var n = nconf.argv().env().file('config/config.json');
+nconf.argv().env().file('config/config.json');
 
 var confFile = nconf.get("CONFIG_FILE");
 if(confFile) {
@@ -17,17 +17,27 @@ router.get('/', function (req, res, next) {
 });
 
 router.get('/temps', function (req, res, next) {
+	var startTime;
+	if(req.query.st === undefined) {
+		var d = new Date();
+		d.setDate(d.getDate() - 1);
+		startTime = d;
+	} else {
+		console.log(req.query.st);
+		startTime = new Date(parseInt(req.query.st));
+	}
+	console.log(startTime);
+
 	var MongoClient = require('mongodb').MongoClient
 
     var connectionStr = 'mongodb://'+ mongoConfig.username +':'+mongoConfig.password+'@'+mongoConfig.host+':'+mongoConfig.port+'/'+mongoConfig.database;
-    console.log(connectionStr);
 	MongoClient.connect(connectionStr, function(err, db) {
 	  if (err) {
 	    throw err;
 	  }
 
 	  db.collection("temperatures").find(
-	  	{ $and: [ {_id: { $gt: objectIdMinusDays(1) }}, {bbq: { $gt: 10, $lt: 25}}, {temperature: { $gt: 10, $lt: 25}}]}
+	  	{ $and: [ {_id: { $gt: objectIdWithTimestamp(startTime) }}, {bbq: { $gt: 10, $lt: 25}}, {temperature: { $gt: 10, $lt: 25}}]}
       ).sort(
         {_id: -1}
       ).map(function(t) { 

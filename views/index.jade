@@ -7,17 +7,42 @@ block extraHeader
   script(src='http://flot.base.is/jquery.flot.downsample.js')
   script(src='https://rawgit.com/MichaelZinsmaier/CurvedLines/master/curvedLines.js')
   script.
+    
+    function simple_moving_averager(period) {
+        var nums = [];
+        return function(num) {
+            nums.push(num);
+            if (nums.length > period)
+                nums.splice(0,1);  // remove the first element of the array
+            var sum = 0;
+            for (var i in nums)
+                sum += nums[i];
+            var n = period;
+            if (nums.length < period)
+                n = nums.length;
+            return(sum/n);
+        }
+    }
+
     $(function() {
+      var d = new Date();
+      d.setDate(d.getDate() - 1);
       $.ajax({
-        url: "/temps"
+        url: "/temps",
+        data: {st: d.getTime()}
       }).done(function( data ) {
         var bbqData = [];
         var tempData = [];
-        $.each(data.reverse(), function(key, value) {
-          bbqData.push([value.timestamp, value.bbq]);
-          tempData.push([value.timestamp, value.temp]);
-        });
-        var seriesData = [bbqData, tempData];
+
+        var smaBBQ = simple_moving_averager(100);
+        var smaTemp = simple_moving_averager(100);
+        for(var i=0;i<data.length;i++) {
+            bbqData.push([data[i].timestamp, smaBBQ(data[i].bbq)]);
+            tempData.push([data[i].timestamp, smaTemp(data[i].temp)]);
+        }
+        bbqData = bbqData.reverse();
+        tempData = tempData.reverse();
+
         $.plot($("#placeholder"), [
             {
                 data: bbqData,
@@ -40,11 +65,11 @@ block extraHeader
             },
             series: {
               downsample: { 
-                threshold: 100 
+                threshold: 56 
               },
               curvedLines: {
                 active: true,
-                nrSplinePoints: 240 // <- control nr of helper points
+                nrSplinePoints: 20 // <- control nr of helper points
               }    
             }
         });
