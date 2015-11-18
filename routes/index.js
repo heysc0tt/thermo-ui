@@ -4,11 +4,6 @@ var nconf = require('nconf');
 
 nconf.argv().env().file('config/config.json');
 
-var confFile = nconf.get("CONFIG_FILE");
-if(confFile) {
-	nconf.file(confFile);
-}
-
 var mongoConfig = getMongoConfig();
 
 /* GET home page. */
@@ -78,11 +73,11 @@ function objectIdWithTimestamp(timestamp) {
 
 function getMongoConfig() {
 	var mongoConfig = {};
-	mongoConfig.host = nconf.get('mongo:host');
-	mongoConfig.port = nconf.get('mongo:port');
-	mongoConfig.database = nconf.get('mongo:database');
-	mongoConfig.username = nconf.get('mongo:username');
-	mongoConfig.password = nconf.get('mongo:password');
+	mongoConfig.host = nconf.get('MONGO_HOST');
+	mongoConfig.port = nconf.get('MONGO_PORT');
+	mongoConfig.database = nconf.get('MONGO_DATABASE');
+	mongoConfig.username = nconf.get('MONGO_USERNAME');
+	mongoConfig.password = nconf.get('MONGO_PASSWORD');
 	return mongoConfig;
 }
 

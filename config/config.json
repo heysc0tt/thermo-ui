@@ -1,9 +1,7 @@
 {
-    "mongo": {
-        "database": "****", 
-        "port": "****", 
-        "host": "****", 
-        "username": "****",
-        "password": "****" 
-    }
+    "MONGO_DATABASE": "****", 
+	"MONGO_PORT": "****", 
+    "MONGO_HOST": "****", 
+    "MONGO_USERNAME": "****",
+    "MONGO_PASSWORD": "****"
 }
