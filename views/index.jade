@@ -7,7 +7,10 @@ block extraHeader
   script(src='http://flot.base.is/jquery.flot.downsample.js')
   script(src='https://rawgit.com/MichaelZinsmaier/CurvedLines/master/curvedLines.js')
   script.
-    
+    Number.prototype.round = function() {
+          return Math.round(this);
+    }
+
     function simple_moving_averager(period) {
         var nums = [];
         return function(num) {
@@ -80,8 +83,8 @@ block extraHeader
                 + " pixels");
         });
 
-        $('#current_indoor .temp').text(tempData[tempData.length-1][1]);
-        $('#current_outdoor .temp').text(bbqData[bbqData.length-1][1]);
+        $('#current_indoor .temp').text(tempData[tempData.length-1][1].round());
+        $('#current_outdoor .temp').text(bbqData[bbqData.length-1][1].round());
       });
     });
 
