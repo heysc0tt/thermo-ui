@@ -27,6 +27,38 @@ block extraHeader
         }
     }
 
+    function setTempAndColor(element, temp) {
+        element.text(temp.round());
+        if(temp < 35) {
+            element.addClass('thirtyfive');
+        } else if(temp < 40) {
+            element.addClass('fourty');
+        } else if(temp < 45) {
+            element.addClass('fourtyfive');
+        } else if(temp < 50) {
+            element.addClass('fifty');
+        } else if(temp < 55) {
+            element.addClass('fiftyfive');
+        } else if(temp < 60) {
+            element.addClass('sixty');
+        } else if(temp < 65) {
+            element.addClass('sixtyfive');
+        } else if(temp < 70) {
+            element.addClass('seventy');
+        } else if(temp < 75) {
+            element.addClass('seventyfive');
+        } else if(temp < 80) {
+            element.addClass('eighty');
+        } else if(temp < 85) {
+            element.addClass('eightyfive');
+        } else if(temp < 90) {
+            element.addClass('ninety');
+        } else {
+            element.addClass('ninetyplus');
+        }
+
+    }
+
     $(function() {
       var d = new Date();
       d.setDate(d.getDate() - 1);
@@ -83,18 +115,20 @@ block extraHeader
                 + " pixels");
         });
 
+        setTempAndColor($('#current_indoor .temp'),  tempData[tempData.length-1][1]);
+        setTempAndColor($('#current_outdoor .temp'), bbqData[bbqData.length-1][1]);
         $('#current_indoor .temp').text(tempData[tempData.length-1][1].round());
-        $('#current_outdoor .temp').text(bbqData[bbqData.length-1][1].round());
       });
     });
 
 block content
   h1= title
-  section(id='current_temps')
-    div(id='current_indoor')
-      p Indoor Temp
-      p(class='temp') -
-    div(id='current_outdoor')
-      p Outdoor Temp
-      p(class='temp') -
+  section(id='current_temps_section')
+    div(id='current_temps_wrapper')
+      div(id='current_indoor', class='current_temp')
+        p(class='temp_label') Indoor Temp
+        p(class='temp') -
+      div(id='current_outdoor', class='current_temp')
+        p(class='temp_label') Outdoor Temp
+        p(class='temp') -
   div(id='placeholder' style="width:100%;height:300px")

@@ -7,10 +7,16 @@ a {
   color: #00B7FF;
 }
 
-p.temp {
-    font-size: 4em;
+.temp {
+    font-size: 5em;
     font-weight: bold;
     font-family: 'Helvetica Neue', 'Open-Bold', sans-serif;
+    border-radius: 50%;
+    width: 100px;
+    height:100px;
+    padding-top: 10px;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 p {
@@ -18,18 +24,77 @@ p {
     font-family: 'Helvetica Neue', 'Open-Bold', sans-serif;
 }
 
-div#current_indoor {
-    margin-right: 50px;
-    margin-left: 50px;
-    display:inline-block;
+.current_temp {
+    margin-right: auto;
+    margin-left: auto;
+    width: 200px;
+    display: inline-block;
+    text-align: center;
 }
 
-div#current_outdoor {
-    margin-right: 50px;
-    margin-left: 50px;
-    display:inline-block;
+#current_temps_wrapper {
+    margin-left: auto;
+    margin-right: auto;
+    width: 500px;
 }
 
-section#current_temps {
+#current_temps {
     background-color: grey;
 }
+
+.temp_label {
+
+}
+
+.temp.ninetyplus {
+    background-color: #D02801;
+}
+
+.temp.ninety {
+    background-color: #FF4F00;
+}
+
+.temp.eightyfive {
+    background-color: #FF7400;
+}
+
+.temp.eighty {
+    background-color: #FF9900;
+}
+
+.temp.seventyfive {
+    background-color: #FFB200;
+}
+
+.temp.seventy {
+    background-color: #FFCC00;
+}
+
+.temp.sixtyfive {
+    background-color: #FBE102;
+}
+
+.temp.sixty {
+    background-color: #F7F705;
+}
+
+.temp.fiftyfive {
+    background-color: #BBFB02;
+}
+
+.temp.fifty {
+    background-color: #7FFF00;
+}
+
+.temp.fourtyfive {
+    background-color: #42FB7B;
+}
+
+.temp.fourty {
+    background-color: #05F7F7;
+}
+
+.temp.thirtyfive {
+    background-color: #02E1FB;
+}
+
