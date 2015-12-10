@@ -63,7 +63,7 @@ block extraHeader
       var d = new Date();
       d.setDate(d.getDate() - 1);
       $.ajax({
-        url: "/temps",
+        url: "/api/temps/since",
         data: {st: d.getTime()}
       }).done(function( data ) {
         var bbqData = [];
