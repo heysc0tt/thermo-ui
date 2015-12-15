@@ -5,7 +5,7 @@ nconf.argv().env().file('config/config.json');
 
 var mongoConfig = getMongoConfig();
 
-exports.since = function(startTime, callback) { 
+exports.since = function(startTime, endTime, callback) { 
 
     mongoClient.connect(mongoURL(mongoConfig.database), function(err, db) {
       if (err) {
@@ -13,7 +13,7 @@ exports.since = function(startTime, callback) {
       }
 
       db.collection("temperatures").find(
-        { $and: [ {_id: { $gt: timestampToObjectId(startTime) }}, {bbq: { $gt: 0, $lt: 45}}, {temperature: { $gt: 10, $lt: 25}}]}
+        { $and: [ {_id: { $gt: timestampToObjectId(startTime), $lt: timestampToObjectId(endTime) }}, {bbq: { $gt: 0, $lt: 45}}, {temperature: { $gt: 10, $lt: 25}}, {id: 1056}]}
       ).sort(
         {_id: -1}
       ).map(function(t) { 

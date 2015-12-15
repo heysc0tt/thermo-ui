@@ -65,9 +65,11 @@ block extraHeader
       $.ajax({
         url: "/api/temps/since",
         data: {st: d.getTime()}
-      }).done(function( data ) {
+      }).done(function( wrapper ) {
         var bbqData = [];
         var tempData = [];
+
+        var data = wrapper.data;
 
         var smaBBQ = simple_moving_averager(100);
         var smaTemp = simple_moving_averager(100);
