@@ -24,7 +24,8 @@ router.get('/temps/since/:start?', function (req, res, next) {
     }
 
     temps.since(startTime, end, function(r) {
-        var json = wrapDataDate(r, req, startTime, end);
+        var consolidatedData = consolidateData(r);
+        var json = wrapDataDate(consolidatedData, req, startTime, end);
         res.json(json);
     });
 });
@@ -109,6 +110,43 @@ function previousSinceUrl(req, previousStartTime, previousEnd) {
         pathname: req.baseUrl + req.path,
         query: { startTime: previousEnd.getTime(), end: (previousEnd.getTime() + period) > Date.now() ? undefined : (previousEnd.getTime() + period) }
     });
+}
+
+function consolidateData(fullData) {
+    var consolidatedData = [];
+
+    var smaBBQ = simple_moving_averager(100);
+    var smaTemp = simple_moving_averager(100);
+    var lastTime = Date.now();
+    for(var i=0;i<fullData.length;i++) {
+        var bbqAvg = smaBBQ(fullData[i].bbq);
+        var tempAvg = smaTemp(fullData[i].temp);
+        if(fullData[i].timestamp < (lastTime - 300000)) {
+            consolidatedData.push({timestamp: fullData[i].timestamp, bbq: bbqAvg, temp: tempAvg});
+            lastTime = fullData[i].timestamp;
+        }
+    }
+    return consolidatedData;
+}
+
+Number.prototype.round = function() {
+      return Math.round(this);
+}
+
+function simple_moving_averager(period) {
+    var nums = [];
+    return function(num) {
+        nums.push(num);
+        if (nums.length > period)
+            nums.splice(0,1);  // remove the first element of the array
+        var sum = 0;
+        for (var i in nums)
+            sum += nums[i];
+        var n = period;
+        if (nums.length < period)
+            n = nums.length;
+        return(sum/n);
+    }
 }
 
 module.exports = router;

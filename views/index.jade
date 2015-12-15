@@ -71,8 +71,8 @@ block extraHeader
 
         var data = wrapper.data;
 
-        var smaBBQ = simple_moving_averager(100);
-        var smaTemp = simple_moving_averager(100);
+        var smaBBQ = simple_moving_averager(6);
+        var smaTemp = simple_moving_averager(6);
         for(var i=0;i<data.length;i++) {
             bbqData.push([data[i].timestamp, smaBBQ(data[i].bbq)]);
             tempData.push([data[i].timestamp, smaTemp(data[i].temp)]);

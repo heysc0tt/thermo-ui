@@ -35,7 +35,7 @@ exports.paginated = function(startIndex, nPerPage, callback) {
       }
 
       db.collection("temperatures").find(
-        { $and: [ {bbq: { $gt: 0, $lt: 45}}, {temperature: { $gt: 10, $lt: 25}}]}
+        { $and: [ {bbq: { $gt: 0, $lt: 45}}, {temperature: { $gt: 10, $lt: 25}}, {id: 1056}]}
       ).sort(
         {_id: -1}
       ).skip(
