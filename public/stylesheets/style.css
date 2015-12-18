@@ -1,6 +1,6 @@
 body {
-  padding: 50px;
   font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+  margin: auto;
 }
 
 a {
@@ -30,6 +30,11 @@ p {
     width: 200px;
     display: inline-block;
     text-align: center;
+}
+
+#current_temps_section {
+    background: #4285f4;
+    margin-bottom: 50px;
 }
 
 #current_temps_wrapper {
