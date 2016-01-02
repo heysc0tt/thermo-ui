@@ -11,6 +11,21 @@ block extraHeader
           return Math.round(this);
     }
 
+    function isNumber(obj) { 
+        return !isNaN(parseFloat(obj)) 
+    }
+
+    if (!Array.prototype.last){
+        Array.prototype.last = function(){
+            return this[this.length - 1];
+        };
+    };
+    if (!Array.prototype.first){
+        Array.prototype.first = function(){
+            return this[0];
+        };
+    };
+
     function simple_moving_averager(period) {
         var nums = [];
         return function(num) {
@@ -27,7 +42,8 @@ block extraHeader
         }
     }
 
-    function setTempAndColor(element, temp) {
+    function setTempAndColor(element, tempStr) {
+        var temp = parseInt(tempStr);
         element.text(temp.round());
         if(temp < 35) {
             element.addClass('thirtyfive');
@@ -66,34 +82,75 @@ block extraHeader
         url: "/api/temps/since",
         data: {st: d.getTime()}
       }).done(function( wrapper ) {
-        var bbqData = [];
-        var tempData = [];
+
+        var values = [];
 
         var data = wrapper.data;
 
-        var smaBBQ = simple_moving_averager(6);
-        var smaTemp = simple_moving_averager(6);
-        for(var i=0;i<data.length;i++) {
-            bbqData.push([data[i].timestamp, smaBBQ(data[i].bbq)]);
-            tempData.push([data[i].timestamp, smaTemp(data[i].temp)]);
+        for(var i=0; i<data.length; i++) {
+            if(!values.hasOwnProperty(data[i].name)) {
+                values[data[i].name] = [];
+            }
+            values[data[i].name].push([data[i].timestamp, data[i].value]);
         }
-        bbqData = bbqData.reverse();
-        tempData = tempData.reverse();
 
-        $.plot($("#placeholder"), [
+        //- var smaBBQ = simple_moving_averager(6);
+        //- var smaTemp = simple_moving_averager(6);
+        //- for(var i=0;i<data.length;i++) {
+        //-     bbqData.push([data[i].timestamp, smaBBQ(data[i].bbq)]);
+        //-     tempData.push([data[i].timestamp, smaTemp(data[i].temp)]);
+        //- }
+        //- bbqData = bbqData.reverse();
+        //- tempData = tempData.reverse();
+
+        var plotConfig = [
             {
-                data: bbqData,
+                data: values['tempF'],
                 curvedLines: {
-                    apply: true  // <- set apply <- curve only this data series
+                    apply: true
                 }
             },
             {
-                data: tempData,
+                data: values['humidity'],
                 curvedLines: {
-                    apply: true  // <- set apply <- curve only this data series
+                    apply: true
+                }
+            },
+            {
+                data: values['dewpoint'],
+                curvedLines: {
+                    apply: true
                 }
             }
-        ], 
+            //- ,
+            //- {
+            //-     data: values['thermostat-on']
+            //- },
+            //- {
+            //-     data: values['thermostat-off']
+            //- }
+        ]
+        //- Array.prototype.forEach.call(values, function(v) {
+        //-     plotConfig.push({ data: v, curvedLines: { apply: true}});
+        //- });
+
+
+        $.plot($("#placeholder"), 
+        //- [
+        //-     {
+        //-         data: bbqData,
+        //-         curvedLines: {
+        //-             apply: true  // <- set apply <- curve only this data series
+        //-         }
+        //-     },
+        //-     {
+        //-         data: tempData,
+        //-         curvedLines: {
+        //-             apply: true  // <- set apply <- curve only this data series
+        //-         }
+        //-     }
+        //- ], 
+        plotConfig,
         { 
             xaxis: {
               mode: "time",
@@ -101,13 +158,13 @@ block extraHeader
               timeformat: "%a %I%p"
             },
             series: {
-              downsample: { 
-                threshold: 56 
-              },
-              curvedLines: {
-                active: true,
-                nrSplinePoints: 20 // <- control nr of helper points
-              }    
+              //- downsample: { 
+              //-   threshold: 56 
+              //- },
+              //- curvedLines: {
+              //-   active: true,
+              //-   nrSplinePoints: 20 // <- control nr of helper points
+              //- }    
             }
         });
 
@@ -117,9 +174,10 @@ block extraHeader
                 + " pixels");
         });
 
-        setTempAndColor($('#current_indoor .temp'),  tempData[tempData.length-1][1]);
-        setTempAndColor($('#current_outdoor .temp'), bbqData[bbqData.length-1][1]);
-        $('#current_indoor .temp').text(tempData[tempData.length-1][1].round());
+        setTempAndColor($('#current_indoor .temp'),  values["tempF"].first()[1]);
+        //- setTempAndColor($('#current_indoor .temp'),  tempData[tempData.length-1][1]);
+        //- setTempAndColor($('#current_outdoor .temp'), bbqData[bbqData.length-1][1]);
+        //- $('#current_indoor .temp').text(tempData[tempData.length-1][1].round());
       });
     });
 

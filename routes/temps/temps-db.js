@@ -12,12 +12,12 @@ exports.since = function(startTime, endTime, callback) {
         throw err;
       }
 
-      db.collection("temperatures").find(
-        { $and: [ {_id: { $gt: timestampToObjectId(startTime), $lt: timestampToObjectId(endTime) }}, {bbq: { $gt: 0, $lt: 45}}, {temperature: { $gt: 10, $lt: 25}}, {id: 1056}]}
+      db.collection("thermostat-events").find(
+        { $and: [ {_id: { $gt: timestampToObjectId(startTime), $lt: timestampToObjectId(endTime) }}]}
       ).sort(
         {_id: -1}
       ).map(function(t) { 
-        return { bbq: (t.bbq*1.8) + 32, temp: (t.temperature*1.8) + 32, timestamp: t._id.getTimestamp().getTime(), thermometerId: t.id }
+        return { value: t.value, timestamp: t._id.getTimestamp().getTime(), name: t.name }
       })
       .toArray(function(err, result) {
         if (err) {
@@ -34,16 +34,14 @@ exports.paginated = function(startIndex, nPerPage, callback) {
         throw err;
       }
 
-      db.collection("temperatures").find(
-        { $and: [ {bbq: { $gt: 0, $lt: 45}}, {temperature: { $gt: 10, $lt: 25}}, {id: 1056}]}
-      ).sort(
+      db.collection("thermostat-events").find({}).sort(
         {_id: -1}
       ).skip(
       	startIndex
       ).limit(
       	nPerPage
       ).map(function(t) { 
-        return { bbq: (t.bbq*1.8) + 32, temp: (t.temperature*1.8) + 32, timestamp: t._id.getTimestamp().getTime(), thermometerId: t.id }
+        return { value: t.value, timestamp: t._id.getTimestamp().getTime(), name: t.name }
       })
       .toArray(function(err, result) {
         if (err) {

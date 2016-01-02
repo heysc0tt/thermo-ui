@@ -24,8 +24,7 @@ router.get('/temps/since/:start?', function (req, res, next) {
     }
 
     temps.since(startTime, end, function(r) {
-        var consolidatedData = consolidateData(r);
-        var json = wrapDataDate(consolidatedData, req, startTime, end);
+        var json = wrapDataDate(r, req, startTime, end);
         res.json(json);
     });
 });
