@@ -15,17 +15,6 @@ block extraHeader
         return !isNaN(parseFloat(obj)) 
     }
 
-    if (!Array.prototype.last){
-        Array.prototype.last = function(){
-            return this[this.length - 1];
-        };
-    };
-    if (!Array.prototype.first){
-        Array.prototype.first = function(){
-            return this[0];
-        };
-    };
-
     function simple_moving_averager(period) {
         var nums = [];
         return function(num) {
@@ -94,13 +83,14 @@ block extraHeader
             values[data[i].name].push([data[i].timestamp, data[i].value]);
         }
 
-        //- var smaBBQ = simple_moving_averager(6);
+        //- var tempData = [];
         //- var smaTemp = simple_moving_averager(6);
-        //- for(var i=0;i<data.length;i++) {
-        //-     bbqData.push([data[i].timestamp, smaBBQ(data[i].bbq)]);
-        //-     tempData.push([data[i].timestamp, smaTemp(data[i].temp)]);
+        //- for(var i=0;i<values['tempF'].length;i++) {
+        //-     var t = parseFloat(values['tempF'][i][1]);
+        //-     var s = values['tempF'][i][0];
+        //-     var tAvg = smaTemp(t);
+        //-     tempData.push([s, tAvg]);
         //- }
-        //- bbqData = bbqData.reverse();
         //- tempData = tempData.reverse();
 
         var plotConfig = [
@@ -118,6 +108,12 @@ block extraHeader
             },
             {
                 data: values['dewpoint'],
+                curvedLines: {
+                    apply: true
+                }
+            },
+            {
+                data: values['thermostat-battery-level'],
                 curvedLines: {
                     apply: true
                 }
@@ -154,17 +150,18 @@ block extraHeader
         { 
             xaxis: {
               mode: "time",
-              timezone: "browser",
-              timeformat: "%a %I%p"
+              timezone: "browser"
+              //- ,
+              //- timeformat: "%a %I%p"
             },
             series: {
-              //- downsample: { 
-              //-   threshold: 56 
-              //- },
-              //- curvedLines: {
-              //-   active: true,
-              //-   nrSplinePoints: 20 // <- control nr of helper points
-              //- }    
+                //- downsample: { 
+                //-     threshold: 56 
+                //- },
+                //- curvedLines: {
+                //-     active: true,
+                //-     nrSplinePoints: 50 // <- control nr of helper points
+                //- }    
             }
         });
 
@@ -174,8 +171,8 @@ block extraHeader
                 + " pixels");
         });
 
-        setTempAndColor($('#current_indoor .temp'),  values["tempF"].first()[1]);
-        //- setTempAndColor($('#current_indoor .temp'),  tempData[tempData.length-1][1]);
+        setTempAndColor($('#current_indoor .temp'),  values["tempF"][0][1]);
+        setTempAndColor($('#current_battery_level .temp'),  values["thermostat-battery-level"][0][1]);
         //- setTempAndColor($('#current_outdoor .temp'), bbqData[bbqData.length-1][1]);
         //- $('#current_indoor .temp').text(tempData[tempData.length-1][1].round());
       });
@@ -187,7 +184,7 @@ block content
       div(id='current_indoor', class='current_temp')
         p(class='temp_label') Indoor Temp
         p(class='temp') -
-      div(id='current_outdoor', class='current_temp')
-        p(class='temp_label') Outdoor Temp
+      div(id='current_battery_level', class='current_temp')
+        p(class='temp_label') Battery Level
         p(class='temp') -
   div(id='placeholder' style="width:100%;height:300px")
