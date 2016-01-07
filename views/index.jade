@@ -90,10 +90,22 @@ block extraHeader
         var data = wrapper.data;
 
         for(var i=0; i<data.length; i++) {
+            // normalize the names temporarily
+            if(data[i].name == "thermostat") {
+                data[i].name = "thermostat-temp";
+            }
+            if(data[i].name == "battery") {
+                data[i].name = "thermostat-battery-level";
+            }
+
             if(!values.hasOwnProperty(data[i].name)) {
                 values[data[i].name] = [];
             }
-            values[data[i].name].push([data[i].timestamp, data[i].value]);
+            if(data[i].name == "thermostat-temp" && data[i].value == -999) {
+                values[data[i].name].push([data[i].timestamp, null]);
+            } else {
+                values[data[i].name].push([data[i].timestamp, data[i].value]);
+            }
         }
 
         //- var tempData = [];
@@ -108,9 +120,22 @@ block extraHeader
 
         var markings = [];
         var tStates = values['thermostat-state'];
+        
+        tStates.sort(function(a,b) {
+          if (a[0] < b[0])
+            return -1;
+          else if (a[0] > b[0])
+            return 1;
+          else 
+            return 0;
+        });
         for(var i=0; i<tStates.length; i++) {
             if(tStates[i][1] == "on") {
-                markings.push({xaxis: {from: tStates[i][0]}, color: "#FA9E00"});
+                if(i<tStates.length-1 && tStates[i+1][1] == "off") {
+                    markings.push({xaxis: {from: tStates[i][0], to: tStates[++i][0]}, color: "#FA9E00"});
+                } else {
+                    markings.push({xaxis: {from: tStates[i][0]}, color: "#FA9E00"});
+                }
             } else {
                 markings.push({xaxis: {to: tStates[i][0]}, color: "#FA9E00"});
             }
@@ -119,7 +144,7 @@ block extraHeader
         $.plot($("#placeholder"), 
         [
             {
-                label: "Temperature (F)",
+                label: "Temperature (&deg;F)",
                 data: values['tempF']
                 //- ,
                 //- curvedLines: {
@@ -127,7 +152,7 @@ block extraHeader
                 //- }
             },
             {
-                label: "Dewpoint (F)",
+                label: "Dewpoint (&deg;F)",
                 data: values['dewpoint']
                 //- ,
                 //- curvedLines: {
@@ -151,14 +176,15 @@ block extraHeader
                 //- curvedLines: {
                 //-     apply: true
                 //- }
+            },
+            {
+                label: "Thermostat Temp (&deg;F)",
+                data: values['thermostat-temp']
+                //- ,
+                //- curvedLines: {
+                //-     apply: true
+                //- }
             }
-            //- ,
-            //- {
-            //-     data: values['thermostat-on']
-            //- },
-            //- {
-            //-     data: values['thermostat-off']
-            //- }
         ],
         {
             yaxes: [
