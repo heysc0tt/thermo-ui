@@ -106,6 +106,16 @@ block extraHeader
         //- }
         //- tempData = tempData.reverse();
 
+        var markings = [];
+        var tStates = values['thermostat-state'];
+        for(var i=0; i<tStates.length; i++) {
+            if(tStates[i][1] == "on") {
+                markings.push({xaxis: {from: tStates[i][0]}, color: "#FA9E00"});
+            } else {
+                markings.push({xaxis: {to: tStates[i][0]}, color: "#FA9E00"});
+            }
+        }
+
         $.plot($("#placeholder"), 
         [
             {
@@ -169,12 +179,16 @@ block extraHeader
             ], 
             xaxis: {
               mode: "time",
-              timezone: "browser"
+              timezone: "browser",
+              twelveHourClock: true
               //- ,
               //- timeformat: "%a %I%p"
             },
             legend: {
                 position: "sw"
+            },
+            grid: {
+                markings: markings
             },
             series: {
                 //- downsample: { 
