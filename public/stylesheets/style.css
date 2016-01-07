@@ -7,7 +7,7 @@ a {
   color: #00B7FF;
 }
 
-.temp {
+.battery, .temp {
     font-size: 5em;
     font-weight: bold;
     font-family: 'Helvetica Neue', 'Open-Bold', sans-serif;
@@ -24,7 +24,7 @@ p {
     font-family: 'Helvetica Neue', 'Open-Bold', sans-serif;
 }
 
-.current_temp {
+.current_battery, .current_temp {
     margin-right: auto;
     margin-left: auto;
     width: 200px;
@@ -47,11 +47,11 @@ p {
     background-color: grey;
 }
 
-.temp_label {
+.battery_label, .temp_label {
 
 }
 
-.temp.ninetyplus {
+.battery.low, .temp.ninetyplus {
     background-color: #D02801;
 }
 
@@ -79,7 +79,7 @@ p {
     background-color: #FBE102;
 }
 
-.temp.sixty {
+.battery.warn, .temp.sixty {
     background-color: #F7F705;
 }
 
@@ -87,7 +87,7 @@ p {
     background-color: #BBFB02;
 }
 
-.temp.fifty {
+.battery.good, .temp.fifty {
     background-color: #7FFF00;
 }
 
@@ -102,4 +102,3 @@ p {
 .temp.thirtyfive {
     background-color: #02E1FB;
 }
-

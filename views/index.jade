@@ -64,6 +64,19 @@ block extraHeader
 
     }
 
+    function setBatteryAndColor(element, batteryStr) {
+        var battery = parseInt(batteryStr);
+        element.text(battery.round());
+        if(battery < 20) {
+            element.addClass('low');
+        } else if(battery < 35) {
+            element.addClass('warn');
+        } else {
+            element.addClass('good');
+        }
+
+    }
+
     $(function() {
       var d = new Date();
       d.setDate(d.getDate() - 1);
@@ -93,30 +106,41 @@ block extraHeader
         //- }
         //- tempData = tempData.reverse();
 
-        var plotConfig = [
+        $.plot($("#placeholder"), 
+        [
             {
-                data: values['tempF'],
-                curvedLines: {
-                    apply: true
-                }
+                label: "Temperature (F)",
+                data: values['tempF']
+                //- ,
+                //- curvedLines: {
+                //-     apply: true
+                //- }
             },
             {
+                label: "Dewpoint (F)",
+                data: values['dewpoint']
+                //- ,
+                //- curvedLines: {
+                //-     apply: true
+                //- }
+            },
+            {
+                label: "Humidity (%)",
                 data: values['humidity'],
-                curvedLines: {
-                    apply: true
-                }
+                yaxis: 2
+                //- ,
+                //- curvedLines: {
+                //-     apply: true
+                //- }
             },
             {
-                data: values['dewpoint'],
-                curvedLines: {
-                    apply: true
-                }
-            },
-            {
+                label: "Battery Level (%)",
                 data: values['thermostat-battery-level'],
-                curvedLines: {
-                    apply: true
-                }
+                yaxis: 2
+                //- ,
+                //- curvedLines: {
+                //-     apply: true
+                //- }
             }
             //- ,
             //- {
@@ -125,34 +149,32 @@ block extraHeader
             //- {
             //-     data: values['thermostat-off']
             //- }
-        ]
-        //- Array.prototype.forEach.call(values, function(v) {
-        //-     plotConfig.push({ data: v, curvedLines: { apply: true}});
-        //- });
-
-
-        $.plot($("#placeholder"), 
-        //- [
-        //-     {
-        //-         data: bbqData,
-        //-         curvedLines: {
-        //-             apply: true  // <- set apply <- curve only this data series
-        //-         }
-        //-     },
-        //-     {
-        //-         data: tempData,
-        //-         curvedLines: {
-        //-             apply: true  // <- set apply <- curve only this data series
-        //-         }
-        //-     }
-        //- ], 
-        plotConfig,
-        { 
+        ],
+        {
+            yaxes: [
+                {
+                    tickFormatter: function(v) {
+                        return v + "&deg;F";
+                    },
+                    tickDecimals: 0
+                }, 
+                {
+                    position: "right",
+                    min: 0, max: 102,
+                    tickFormatter: function(v) {
+                        return v + "%";
+                    },
+                    tickDecimals: 0
+                }
+            ], 
             xaxis: {
               mode: "time",
               timezone: "browser"
               //- ,
               //- timeformat: "%a %I%p"
+            },
+            legend: {
+                position: "sw"
             },
             series: {
                 //- downsample: { 
@@ -172,9 +194,7 @@ block extraHeader
         });
 
         setTempAndColor($('#current_indoor .temp'),  values["tempF"][0][1]);
-        setTempAndColor($('#current_battery_level .temp'),  values["thermostat-battery-level"][0][1]);
-        //- setTempAndColor($('#current_outdoor .temp'), bbqData[bbqData.length-1][1]);
-        //- $('#current_indoor .temp').text(tempData[tempData.length-1][1].round());
+        setBatteryAndColor($('#current_battery_level .battery'),  values["thermostat-battery-level"][0][1]);
       });
     });
 
@@ -184,7 +204,7 @@ block content
       div(id='current_indoor', class='current_temp')
         p(class='temp_label') Indoor Temp
         p(class='temp') -
-      div(id='current_battery_level', class='current_temp')
-        p(class='temp_label') Battery Level
-        p(class='temp') -
+      div(id='current_battery_level', class='current_battery')
+        p(class='battery_label') Battery Level
+        p(class='battery') -
   div(id='placeholder' style="width:100%;height:300px")
