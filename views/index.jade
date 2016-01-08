@@ -119,7 +119,7 @@ block extraHeader
         //- tempData = tempData.reverse();
 
         var markings = [];
-        var tStates = values['thermostat-state'];
+        var tStates = values['thermostat-state'] || [];
         
         tStates.sort(function(a,b) {
           if (a[0] < b[0])
