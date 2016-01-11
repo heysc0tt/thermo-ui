@@ -7,7 +7,7 @@ a {
   color: #00B7FF;
 }
 
-.battery, .temp {
+.battery, .temp, .humidity {
     font-size: 5em;
     font-weight: bold;
     font-family: 'Helvetica Neue', 'Open-Bold', sans-serif;
@@ -24,7 +24,7 @@ p {
     font-family: 'Helvetica Neue', 'Open-Bold', sans-serif;
 }
 
-.current_battery, .current_temp {
+.current_battery, .current_temp, .current_humidity {
     margin-right: auto;
     margin-left: auto;
     width: 200px;
@@ -40,18 +40,18 @@ p {
 #current_temps_wrapper {
     margin-left: auto;
     margin-right: auto;
-    width: 500px;
+    width: 600px;
 }
 
 #current_temps {
     background-color: grey;
 }
 
-.battery_label, .temp_label {
+.battery_label, .temp_label, .humidity_level {
 
 }
 
-.battery.low, .temp.ninetyplus {
+.battery.low, .temp.ninetyplus, .humidity.high {
     background-color: #D02801;
 }
 
@@ -79,7 +79,7 @@ p {
     background-color: #FBE102;
 }
 
-.battery.warn, .temp.sixty {
+.battery.warn, .temp.sixty, .humidity.warn {
     background-color: #F7F705;
 }
 
@@ -87,7 +87,7 @@ p {
     background-color: #BBFB02;
 }
 
-.battery.good, .temp.fifty {
+.battery.good, .temp.fifty, .humidity.low {
     background-color: #7FFF00;
 }
 
