@@ -4,7 +4,6 @@ block extraHeader
   script(src='https://cdnjs.cloudflare.com/ajax/libs/flot/0.8.3/jquery.flot.min.js')
   script(src='https://cdnjs.cloudflare.com/ajax/libs/flot/0.8.3/jquery.flot.time.min.js')
   script(src='https://cdnjs.cloudflare.com/ajax/libs/flot/0.8.3/jquery.flot.resize.min.js')
-  script(src='http://flot.base.is/jquery.flot.downsample.js')
   script(src='https://rawgit.com/MichaelZinsmaier/CurvedLines/master/curvedLines.js')
   script.
     Number.prototype.round = function() {
@@ -189,6 +188,14 @@ block extraHeader
                 //- curvedLines: {
                 //-     apply: true
                 //- }
+            },
+            {
+                label: "Thermostat Temp (&deg;F)",
+                data: values['thermostat-temp']
+                //- ,
+                //- curvedLines: {
+                //-     apply: true
+                //- }
             }
         ],
         {
@@ -238,9 +245,15 @@ block extraHeader
                 + " pixels");
         });
 
-        setTempAndColor($('#current_indoor .temp'),  values["tempF"][0][1]);
-        setHumidityAndColor($('#current_humidity .humidity'),  values["humidity"][0][1]);
-        setBatteryAndColor($('#current_battery_level .battery'),  values["thermostat-battery-level"][0][1]);
+        if( "tempF" in values) {
+            setTempAndColor($('#current_indoor .temp'),  values["tempF"][0][1]);
+        }
+        if("humidity" in values) {
+            setHumidityAndColor($('#current_humidity .humidity'),  values["humidity"][0][1]);
+        }
+        if("thermostat-battery-level") {
+            setBatteryAndColor($('#current_battery_level .battery'),  values["thermostat-battery-level"][0][1]);
+        }
       });
     });
 
@@ -254,6 +267,6 @@ block content
         p(class='humidity_label') Humidity
         p(class='humidity') -
       div(id='current_battery_level', class='current_battery')
-        p(class='battery_label') Battery
+        p(class='battery_label') Battery Level
         p(class='battery') -
   div(id='placeholder' style="width:100%;height:300px")
