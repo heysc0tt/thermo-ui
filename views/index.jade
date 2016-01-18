@@ -258,7 +258,7 @@ block extraHeader
                 var d = new Date();
                 d.setTime(x);
 
-                $("#tooltip").html(item.series.label + " at " + formatAMPM(d) + " = " + y)
+                $("#tooltip").html(item.series.label + "<br>" + formatAMPM(d) + "<br>" + y)
                     .css({top: item.pageY+5, left: item.pageX+5})
                     .fadeIn(200);
             } else {
